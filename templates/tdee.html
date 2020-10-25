@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{%block title%}Energy Calculation{%endblock%}
+
+{% block content %}
+<div class="wrapper">
+
+
+    <h1 class="display-1">Calculate your health Stats</h1>
+    <p class="lead"></p>
+
+
+    <form id='TDEE-form' method="POST" action="/tdee">
+        {{form.hidden_tag()}}
+        {% for field in form
+        if field.widget.input_type != 'hidden' %}
+        <p>
+            {{field.label}}
+            {{field(class_="form-field")}}
+
+            <!-- {% for error in field.errors %}
+        <span class="form-text text-danger">{{error}}</span>
+        {%endfor%} -->
+        </p>
+        {%endfor%}
+        <button class='submit-button' type='submit'>Submit</button>
+    </form>
+</div>
+<!-- <script src="/static/tdeeCalculator.js"></script>
+<script>
+
+    $('#TDEE-form').submit(async function (e) {
+        e.preventDefault()
+        let gender = $('#gender').val()
+        let height = $('#height').val()
+        let weight = $('#weight').val()
+        let age = $('#age').val()
+        let activity_level = $('#activity_level').val()
+        calculateTDEE(gender, height, weight, age, activity_level)
+    })
+
+</script> -->
+
+
+{%endblock%}

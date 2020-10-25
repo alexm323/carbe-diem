@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{%block title%}Signup{%endblock%}
+
+{% block content %}
+<div class="form-container">
+    <div class="left">
+
+
+
+        <div class="form">
+            <div class="header">
+                <h2 class='animation a3'>Sign Up</h2>
+                <h4 class='animation a4'>Already have an account? <br><a class='signup-link' href="/login"> Login
+                        here</a>
+                </h4>
+            </div>
+            <form method='POST'>
+                {{form.hidden_tag()}}
+                {% for field in form
+                if field.widget.input_type != 'hidden' %}
+                <p>
+                    {{field.label}}
+                    {{field(class_='form-field animation a5')}}
+
+                    {% for error in field.errors %}
+                    <span class="">{{error}}</span>
+                    {%endfor%}
+                </p>
+                {%endfor%}
+                <button class='submit-button animation a6' type='submit'>Register</button>
+            </form>
+
+        </div>
+
+
+    </div>
+    <div class="right">
+    </div>
+
+</div>
+
+
+
+
+
+{%endblock%}

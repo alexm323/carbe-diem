@@ -1,0 +1,118 @@
+{%extends 'base.html'%}
+{%block title%}Dashboard{%endblock%}
+{%block content%}
+<div class="wrapper">
+
+    <table class='table'>
+        <caption class='caption1'>Health by the Numbers</caption>
+        <tr class='row odd'>
+            <th>Metric</th>
+            <th>Current Data</th>
+            <th>Healthy Goal</th>
+        </tr>
+        <tr class='row'>
+            <td>Total Daily Energy Expenditure</td>
+            <td>{{user.statistics[0].tdee}} kCals</td>
+            <td>-</td>
+        </tr>
+        <tr class='row odd'>
+            <td>Body Mass Index</td>
+            <td>{{user.statistics[0].bmi}} kg/m<sup>2</sup></td>
+            <td>24.9 kg/m<sup>2</sup></td>
+        </tr>
+        <tr class='row'>
+            <td>Weight</td>
+            <td>{{user.statistics[0].weight}} lbs.</td>
+            <td>{{user.statistics[0].ideal_weight}} lbs.</td>
+        </tr>
+        <tr class='row odd'>
+            <td>Pounds to Lose</td>
+            <td>{{user.statistics[0].pounds_to_lose}} lbs.</td>
+            <td>-</td>
+        </tr>
+        <tr class='row'>
+            <td>Ideal Time Frame</td>
+            <td>{{user.statistics[0].ideal_time_frame}} days</td>
+            <td>-</td>
+        </tr>
+    </table>
+    <!-- <table class='table'>
+        <caption class='caption2'>Balanced Meal Macronutrient Breakdown</caption>
+        <tr class='row odd'>
+            <th>Nutrient</th>
+            <th>Maintenance Calorie Allocation</th>
+            <th>Weight Loss Allocation</th>
+        </tr>
+        <tr class='row'>
+            <td class='carbs'>Carbs</td>
+            <td>{{user.statistics[0].tdee * 0.4}} kCal</td>
+            <td>{{1200*0.4}} kCal</td>
+        </tr>
+        <tr class='row odd'>
+            <td class='fats'>Fats</td>
+            <td>{{user.statistics[0].tdee * 0.3}} kCal</td>
+            <td>{{1200*0.3}} kCal</td>
+        </tr>
+        <tr class='row'>
+            <td class='proteins'>Protein</td>
+            <td>{{user.statistics[0].tdee * 0.3}} kCal</td>
+            <td>{{1200*0.3}} kCal</td>
+        </tr>
+    </table> -->
+    <div class="grid-2 dashboard-table-chart">
+
+
+        <table class='table'>
+            <caption class='caption3'>Ketogenic Meal Macronutrient Breakdown</caption>
+            <tr>
+            <tr class='row odd'>
+                <th>Nutrient</th>
+                <th>Maintenance Calorie Allocation</th>
+                <th>Weight Loss Allocation</th>
+            </tr>
+            <tr class='row'>
+                <td class='carbs'>Carbs</td>
+                <td>{{user.statistics[0].tdee * 0.05}} kCal</td>
+                <td>{{1200*0.05}} kCal</td>
+            </tr>
+            <tr class='row odd'>
+                <td class='fats'>Fats</td>
+                <td>{{user.statistics[0].tdee * 0.60}} kCal</td>
+                <td>{{1200*0.6}} kCal</td>
+            </tr>
+            <tr class='row'>
+                <td class='proteins'>Protein</td>
+                <td>{{user.statistics[0].tdee * 0.35}} kCal</td>
+                <td>{{1200*0.35}} kCal</td>
+            </tr>
+            </tr>
+        </table>
+        <div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+    let myChart = document.getElementById('myChart').getContext('2d');
+    let chart = new Chart(myChart, {
+        // The type of chart we want to create
+        type: 'pie',
+
+        // The data for our dataset
+        data: {
+            labels: ['Carbs', 'Fats', 'Protein'],
+            datasets: [{
+                label: 'Macrobreakdown',
+                data: [{{ user.statistics[0].tdee * 0.05 }}, {{ user.statistics[0].tdee * 0.60 }}, {{ user.statistics[0].tdee * 0.35 }}],
+    backgroundColor: ['#ea6153', '#2980b9', '#27ae60']
+        }]
+
+    },
+
+    // Configuration options go here
+    options: { }
+    });
+</script>
+{%endblock%}
