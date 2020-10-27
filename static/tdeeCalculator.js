@@ -58,3 +58,14 @@ function calculateTDEE(gender, height, weight, age, activityLevel) {
 
     }
 }
+
+let greetings = ['morning']
+
+function greetingForJoyce(timing) {
+    if (timing === 'first') {
+        console.log('Good morning Joyce!')
+    } else {
+        greetings.unshift('Good')
+        console.log(greetings[0] + greetings[1])
+    }
+}

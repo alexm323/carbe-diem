@@ -105,6 +105,24 @@ a,.signup-link:visited {
   background-repeat: no-repeat;
   background-position: center;
 }
+.right-2 {
+    flex: 1;
+    background-color: black;
+  transition: 1s;
+  background-image: url(https://i.ibb.co/ydTR8nn/yoga.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.right-3 {
+    flex: 1;
+    background-color: black;
+  transition: 1s;
+  background-image: url(https://i.ibb.co/x335RYL/fruits-and-vegetables.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 .header > h2 {
   margin: 0;
   color: whitesmoke;

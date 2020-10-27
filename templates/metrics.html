@@ -9,7 +9,7 @@
     <p class="lead"></p>
 
 
-    <form id='TDEE-form' method="POST" action="/tdee">
+    <form id='TDEE-form' method="POST" action="/metrics">
         {{form.hidden_tag()}}
         {% for field in form
         if field.widget.input_type != 'hidden' %}

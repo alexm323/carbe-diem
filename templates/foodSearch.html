@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{%block title%}Login{%endblock%}
+{%block title%}Food Searcb{%endblock%}
 
 {% block content %}
 <div class="form-container">
@@ -9,10 +9,8 @@
 
         <div class="form">
             <div class="header">
-                <h2 class='animation a3'>Log In</h2>
-                <h4 class='animation a4'>Need to register an account? <br><a class='signup-link' href="/signup">Register
-                        here</a>
-                </h4>
+                <h2 class='animation a3'>Retrieve<br> Nutritional Data</h2>
+
             </div>
             <form method='POST'>
                 {{form.hidden_tag()}}
@@ -27,14 +25,14 @@
                     {%endfor%}
                 </p>
                 {%endfor%}
-                <button class='submit-button animation a6' type='submit'>Login</button>
+                <button class='submit-button animation a6' type='submit'>Search Food</button>
             </form>
 
         </div>
 
 
     </div>
-    <div class="right">
+    <div class="right-3">
     </div>
 
 </div>

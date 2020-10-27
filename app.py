@@ -1,14 +1,13 @@
 from flask import Flask, request, render_template,  redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db,  connect_db, User, Stats
+from models import db,  connect_db, User, Stats, Food, Entry, Date
 import requests
 from flask_login import LoginManager, login_required, login_user, current_user, logout_user
 from credentials import api_app_id, api_app_key
 from forms import LoginForm, RegisterForm, TDEEForm, FoodForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from tdee_calculator import *
-import json
-from jsonpath_ng import jsonpath, parse
+import datetime
 search_endpoint = 'https://api.edamam.com/api/food-database/v2/parser'
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///nutrientry'
@@ -83,14 +82,14 @@ def home_page():
 @login_required
 def show_dashboard():
     if (len(current_user.statistics) == 0):
-        return redirect('/tdee')
+        return redirect('/metrics')
     return render_template('dashboard.html', user=current_user)
 
 #####################################################
 # Total Daily Energy Expenditure Calculator
 
 
-@app.route('/tdee', methods=['GET', 'POST'])
+@app.route('/metrics', methods=['GET', 'POST'])
 @login_required
 def show_calculator_form():
     """Use a total daily energy expenditure to find and add the users current stats to their user stats information"""
@@ -124,7 +123,7 @@ def show_calculator_form():
             current_stats.ideal_time_frame = ideal_time_frame
             db.session.commit()
             return redirect('/dashboard')
-    return render_template('tdee.html', form=form, user=current_user)
+    return render_template('metrics.html', form=form, user=current_user)
 
 #####################################################
 
@@ -155,20 +154,41 @@ def get_food_info(food):
 #     return render_template('diary.html', response=response)
 
 
-@app.route('/diary', methods=['GET', 'POST'])
-def food_form():
+@app.route('/search', methods=['GET', 'POST'])
+def search_food_form():
     form = FoodForm()
     if form.validate_on_submit():
-        food = request.form['food']
+        food = request.form['food'].strip().lower()
         food_response = get_food_info(food)
+        for item in food_response:
+            calories = food_response[item]['kCal']
+            fat = food_response[item]['Fats']
+            carbs = food_response[item]['Carbs']
+            protein = food_response[item]['Protein']
+            new_food = Food(query_term=food, item=item,
+                            calories=calories, fat=fat, carbs=carbs, protein=protein)
+            db.session.add(new_food)
+            db.session.commit()
+        session['food'] = food
+        print(session['food'])
+        return redirect('/new_entry')
 
-    return render_template('diaryForm.html', form=form)
+    return render_template('foodSearch.html', form=form)
+
+
+@app.route('/new_entry', methods=['GET', 'POST'])
+def submit_new_entry_form():
+    food = session['food']
+
+    foods = Food.query.filter_by(query_term=food).all()
+    return render_template('newEntry.html', foods=foods)
+
+
+@app.route('/learn')
+def show_learn_info():
+    return render_template('learn.html')
 
 
 # python background jobs
 # database object with a time stamp that is 20 hours from now and each time the person logs in, check if they have one of those database objects with the time in the past. It wont be real time
 # Things before mentor call, start working on the after form is submitted for the food diary, need to have an outline of what it should look like, dont know if I want to break it up in days or if it should be by section of the day. I want to generate a select field for a person to be able to submit their final choice of food for submission into the database.
-
-@app.route('/learn')
-def show_learn_info():
-    return render_template('learn.html')
