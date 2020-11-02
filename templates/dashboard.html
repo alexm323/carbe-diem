@@ -36,58 +36,66 @@
             <td>-</td>
         </tr>
     </table>
-    <!-- <table class='table'>
-        <caption class='caption2'>Balanced Meal Macronutrient Breakdown</caption>
+    <table class='table'>
+        <caption class='caption2'>Overview for {{today.strftime('%m/%d/%y')}}</caption>
         <tr class='row odd'>
-            <th>Nutrient</th>
-            <th>Maintenance Calorie Allocation</th>
-            <th>Weight Loss Allocation</th>
-        </tr>
-        <tr class='row'>
-            <td class='carbs'>Carbs</td>
-            <td>{{user.statistics[0].tdee * 0.4}} kCal</td>
-            <td>{{1200*0.4}} kCal</td>
+            <th></th>
+            <th>Daily Goal</th>
+            <th>Total Logged</th>
+            <th>Remaining</th>
         </tr>
         <tr class='row odd'>
-            <td class='fats'>Fats</td>
-            <td>{{user.statistics[0].tdee * 0.3}} kCal</td>
-            <td>{{1200*0.3}} kCal</td>
+            <td class=''>Calories (kCal)</td>
+            <td>{{(user.statistics[0].tdee)}}</td>
+            <td>{{sum_calories}}</td>
+            <td>{{(user.statistics[0].tdee) - (sum_calories)}}</td>
+
         </tr>
         <tr class='row'>
-            <td class='proteins'>Protein</td>
-            <td>{{user.statistics[0].tdee * 0.3}} kCal</td>
-            <td>{{1200*0.3}} kCal</td>
+            <td class='carbs'>Carbs (g)</td>
+            <td>{{(user.statistics[0].tdee * 0.05/4)|round|int}}</td>
+            <td>{{sum_carbs}}</td>
+            <td>{{((user.statistics[0].tdee * 0.05/4) - (sum_carbs))|round|int}}</td>
         </tr>
-    </table> -->
+        <tr class='row odd'>
+            <td class='fats'>Fats (g)</td>
+            <td>{{(user.statistics[0].tdee * 0.6/9)|round|int}}</td>
+            <td>{{sum_fat}}</td>
+            <td>{{((user.statistics[0].tdee * 0.6/9) - sum_fat)|round|int}}</td>
+        </tr>
+        <tr class='row'>
+            <td class='proteins'>Protein (g)</td>
+            <td>{{(user.statistics[0].tdee * 0.35/4)|round|int}}</td>
+            <td>{{sum_protein}}</td>
+            <td>{{((user.statistics[0].tdee * 0.35/4) - sum_protein)|round|int}}</td>
+        </tr>
+    </table>
     <div class="grid-2 dashboard-table-chart">
 
 
         <table class='table'>
-            <caption class='caption3'>Ketogenic Meal Macronutrient Breakdown</caption>
+            <caption class='caption3'>Today's Intake</caption>
             <tr>
             <tr class='row odd'>
-                <th>Nutrient</th>
-                <th>Maintenance Calorie Allocation</th>
-                <th>Weight Loss Allocation</th>
+                <th></th>
+                <th>Entry Item</th>
+                <th>Calories</th>
+                <th>Carbs</th>
+                <th>Fat</th>
+                <th>Protein</th>
             </tr>
-            <tr class='row'>
-                <td class='carbs'>Carbs</td>
-                <td>{{user.statistics[0].tdee * 0.05}} kCal</td>
-                <td>{{1200*0.05}} kCal</td>
+            {%for entry in entries%}
+            <tr class="row">
+                <td></td>
+                <td>{{entry.food.item}}</td>
+                <td>{{entry.food.calories}}</td>
+                <td>{{entry.food.carbs}}</td>
+                <td>{{entry.food.fat}}</td>
+                <td>{{entry.food.protein}}</td>
             </tr>
-            <tr class='row odd'>
-                <td class='fats'>Fats</td>
-                <td>{{user.statistics[0].tdee * 0.60}} kCal</td>
-                <td>{{1200*0.6}} kCal</td>
-            </tr>
-            <tr class='row'>
-                <td class='proteins'>Protein</td>
-                <td>{{user.statistics[0].tdee * 0.35}} kCal</td>
-                <td>{{1200*0.35}} kCal</td>
-            </tr>
-            </tr>
+            {%endfor%}
         </table>
-        <div>
+        <div id='chartHolder'>
             <canvas id="myChart"></canvas>
         </div>
     </div>
@@ -95,18 +103,21 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
+    let sumFat = {{ sum_carbs }}
+    let sumCarb = {{ sum_fat }}
+    let sumProtein = {{ sum_protein }}
     let myChart = document.getElementById('myChart').getContext('2d');
     let chart = new Chart(myChart, {
         // The type of chart we want to create
-        type: 'pie',
+        type: 'horizontalBar',
 
         // The data for our dataset
         data: {
-            labels: ['Carbs', 'Fats', 'Protein'],
+            labels: ['Goal Carbs', 'Carbs', 'Goal Fats', 'Fats', 'Goal Protein', 'Protein'],
             datasets: [{
-                label: 'Macrobreakdown',
-                data: [{{ user.statistics[0].tdee * 0.05 }}, {{ user.statistics[0].tdee * 0.60 }}, {{ user.statistics[0].tdee * 0.35 }}],
-    backgroundColor: ['#ea6153', '#2980b9', '#27ae60']
+                label: 'Intake in Grams',
+                data: [{{ user.statistics[0].tdee * 0.05 / 4 }}, sumCarb, {{ user.statistics[0].tdee * 0.60 / 9 }}, sumFat,{{ user.statistics[0].tdee * 0.35 / 4 }}, sumProtein],
+    backgroundColor: ['#ea6153', '#ea6153', '#2980b9', '#2980b9', '#27ae60', '#27ae60']
         }]
 
     },

@@ -36,3 +36,8 @@ class TDEEForm(FlaskForm):
 class FoodForm(FlaskForm):
     food = StringField("Food", validators=[
         InputRequired(), Length(max=50)])
+
+
+class SelectFood(FlaskForm):
+    selected_food = SelectField("Selected Food")
+    servings = IntegerField("Servings")

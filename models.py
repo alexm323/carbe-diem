@@ -52,14 +52,8 @@ class Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user = db.relationship('User', backref='user_entries')
+
     food_id = db.Column(db.Integer, db.ForeignKey('food.id'))
     food = db.relationship('Food', backref='food_entries')
-    date_id = db.Column(db.Integer, db.ForeignKey('dates.id'))
-    date = db.relationship('Date', backref='date_entries')
 
-
-class Date(db.Model):
-    __tablename__ = 'dates'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     date = db.Column(db.Date)
-    # entries = db.relationship('Entry', backref='date')
