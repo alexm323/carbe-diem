@@ -252,3 +252,4 @@ def show_learn_info():
 # is there a way to generate a tdee automatically each day?
 # maybe i dont need to do that and I can just check for the date and if there is no entries I just show the normal graphs and tables and if
 # the user has entries then I can show the subtracted values on the dashboard
+#<!-- Alex.onBoarding where the first thing would be a string with ('health info entered'), searched for a food, if it has been searched  , cards for responsive view of the dashboar

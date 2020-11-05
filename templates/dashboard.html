@@ -26,7 +26,7 @@
             <td>{{user.statistics[0].ideal_weight}} lbs.</td>
         </tr>
         <tr class='row odd'>
-            <td>Pounds to Lose</td>
+            <td>Weight Left to Lose</td>
             <td>{{user.statistics[0].pounds_to_lose}} lbs.</td>
             <td>-</td>
         </tr>
@@ -79,6 +79,7 @@
             <tr class='row odd'>
                 <th></th>
                 <th>Entry Item</th>
+                <th>Servings</th>
                 <th>Calories</th>
                 <th>Carbs</th>
                 <th>Fat</th>
@@ -88,6 +89,7 @@
             <tr class="row">
                 <td></td>
                 <td>{{entry.food.item}}</td>
+                <td>1</td>
                 <td>{{entry.food.calories}}</td>
                 <td>{{entry.food.carbs}}</td>
                 <td>{{entry.food.fat}}</td>
@@ -127,3 +129,5 @@
     });
 </script>
 {%endblock%}
+
+
