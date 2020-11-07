@@ -79,13 +79,16 @@ def get_food_info(food):
     food_arr = search_result['hints']
     food_dict = {}
     for index in food_arr:
-        macro_dict = {}
-
+        macro_dict = {'kCal': 0, 'Carbs': 0, 'Fats': 0, 'Protein': 0}
+        print(index)
         food_label = index['food']['label']
-        macro_dict['kCal'] = round(index['food']['nutrients']['ENERC_KCAL'])
-        macro_dict['Carbs'] = round(index['food']['nutrients']['CHOCDF'])
-        macro_dict['Fats'] = round(index['food']['nutrients']['FAT'])
-        macro_dict['Protein'] = round(index['food']['nutrients']['PROCNT'])
+        macro_dict['kCal'] = round(
+            index['food']['nutrients'].get('ENERC_KCAL', 0))
+        macro_dict['Carbs'] = round(
+            index['food']['nutrients'].get('CHOCDF', 0))
+        macro_dict['Fats'] = round(index['food']['nutrients'].get('FAT', 0))
+        macro_dict['Protein'] = round(
+            index['food']['nutrients'].get('PROCNT', 0))
         food_dict[food_label] = macro_dict
 
     return food_dict
@@ -138,11 +141,13 @@ def show_dashboard():
     sum_carbs = 0
     sum_fat = 0
     sum_protein = 0
+
     for entry in todays_entries:
-        sum_calories = sum_calories + entry.food.calories
-        sum_fat = sum_fat + entry.food.fat
-        sum_carbs = sum_carbs + entry.food.carbs
-        sum_protein = sum_protein + entry.food.protein
+        sum_calories = (sum_calories + (entry.food.calories*entry.servings))
+        sum_fat = (sum_fat + (entry.food.fat*entry.servings))
+        sum_carbs = (sum_carbs + (entry.food.carbs*entry.servings))
+        sum_protein = (sum_protein + (entry.food.protein*entry.servings))
+
     return render_template('dashboard.html', user=current_user, entries=todays_entries, today=today, sum_calories=sum_calories, sum_carbs=sum_carbs, sum_fat=sum_fat, sum_protein=sum_protein)
 
 #####################################################
@@ -227,9 +232,11 @@ def submit_new_entry_form():
     if form.validate_on_submit():
 
         food = request.form['selected_food']
+        servings = request.form['servings']
         date = datetime.date.today().strftime("%m/%d/%y")
         user_id = current_user.id
-        new_entry = Entry(food_id=food, date=date, user_id=user_id)
+        new_entry = Entry(food_id=food, date=date,
+                          user_id=user_id, servings=servings)
         db.session.add(new_entry)
         db.session.commit()
         return redirect('/dashboard')
@@ -252,4 +259,4 @@ def show_learn_info():
 # is there a way to generate a tdee automatically each day?
 # maybe i dont need to do that and I can just check for the date and if there is no entries I just show the normal graphs and tables and if
 # the user has entries then I can show the subtracted values on the dashboard
-#<!-- Alex.onBoarding where the first thing would be a string with ('health info entered'), searched for a food, if it has been searched  , cards for responsive view of the dashboar
+# <!-- Alex.onBoarding where the first thing would be a string with ('health info entered'), searched for a food, if it has been searched  , cards for responsive view of the dashboar

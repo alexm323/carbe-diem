@@ -2,7 +2,37 @@
 {%block title%}Dashboard{%endblock%}
 {%block content%}
 <div class="wrapper">
+    <div class="grid-2 dashboard-table-chart">
 
+
+        <table class='table'>
+            <caption class='caption3'>Today's Intake</caption>
+            <tr>
+            <tr class='row odd'>
+                <th></th>
+                <th>Entry Item</th>
+                <th>Servings</th>
+                <th>Calories</th>
+                <th>Carbs</th>
+                <th>Fat</th>
+                <th>Protein</th>
+            </tr>
+            {%for entry in entries%}
+            <tr class="row">
+                <td></td>
+                <td>{{entry.food.item}}</td>
+                <td id='entry-servings'>{{entry.servings}}</td>
+                <td>{{entry.food.calories *entry.servings}}</td>
+                <td>{{entry.food.carbs *entry.servings}}</td>
+                <td>{{entry.food.fat *entry.servings}}</td>
+                <td>{{entry.food.protein *entry.servings}}</td>
+            </tr>
+            {%endfor%}
+        </table>
+        <div id='chartHolder'>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
     <table class='table'>
         <caption class='caption1'>Health by the Numbers</caption>
         <tr class='row odd'>
@@ -70,43 +100,14 @@
             <td>{{((user.statistics[0].tdee * 0.35/4) - sum_protein)|round|int}}</td>
         </tr>
     </table>
-    <div class="grid-2 dashboard-table-chart">
 
-
-        <table class='table'>
-            <caption class='caption3'>Today's Intake</caption>
-            <tr>
-            <tr class='row odd'>
-                <th></th>
-                <th>Entry Item</th>
-                <th>Servings</th>
-                <th>Calories</th>
-                <th>Carbs</th>
-                <th>Fat</th>
-                <th>Protein</th>
-            </tr>
-            {%for entry in entries%}
-            <tr class="row">
-                <td></td>
-                <td>{{entry.food.item}}</td>
-                <td>1</td>
-                <td>{{entry.food.calories}}</td>
-                <td>{{entry.food.carbs}}</td>
-                <td>{{entry.food.fat}}</td>
-                <td>{{entry.food.protein}}</td>
-            </tr>
-            {%endfor%}
-        </table>
-        <div id='chartHolder'>
-            <canvas id="myChart"></canvas>
-        </div>
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
-    let sumFat = {{ sum_carbs }}
-    let sumCarb = {{ sum_fat }}
+
+    let sumFat = {{ sum_fat }}
+    let sumCarb = {{ sum_carbs }}
     let sumProtein = {{ sum_protein }}
     let myChart = document.getElementById('myChart').getContext('2d');
     let chart = new Chart(myChart, {
@@ -129,5 +130,3 @@
     });
 </script>
 {%endblock%}
-
-

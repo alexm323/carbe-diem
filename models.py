@@ -57,3 +57,4 @@ class Entry(db.Model):
     food = db.relationship('Food', backref='food_entries')
 
     date = db.Column(db.Date)
+    servings = db.Column(db.Integer)
