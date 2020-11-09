@@ -412,7 +412,7 @@ footer p {
   .wrapper{
     margin: 0 auto;
     padding: 40px;
-    max-width: 800px;
+    max-width: 1000px;
   }
   .aside{
     margin-left: 20px;
@@ -453,4 +453,8 @@ footer p {
   margin: 0;
   background-color: whitesmoke;
   max-height: 100vh;
+}
+.total td{
+
+  border: 1px solid black ;
 }

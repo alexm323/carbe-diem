@@ -9,7 +9,6 @@
             <caption class='caption3'>Today's Intake</caption>
             <tr>
             <tr class='row odd'>
-                <th></th>
                 <th>Entry Item</th>
                 <th>Servings</th>
                 <th>Calories</th>
@@ -19,7 +18,6 @@
             </tr>
             {%for entry in entries%}
             <tr class="row">
-                <td></td>
                 <td>{{entry.food.item}}</td>
                 <td id='entry-servings'>{{entry.servings}}</td>
                 <td>{{entry.food.calories *entry.servings}}</td>
@@ -28,6 +26,15 @@
                 <td>{{entry.food.protein *entry.servings}}</td>
             </tr>
             {%endfor%}
+            <tr class='total'>
+                <td>Total</td>
+                <td></td>
+                <td>{{sum_calories}} kCal</td>
+                <td>{{sum_carbs}} g</td>
+                <td>{{sum_fat}} g</td>
+                <td>{{sum_protein}} g</td>
+            </tr>
+
         </table>
         <div id='chartHolder'>
             <canvas id="myChart"></canvas>
