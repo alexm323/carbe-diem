@@ -1,4 +1,5 @@
 def calculate_tdee(gender, height, weight, age, activity_level):
+    """Calculate the Total Daily Energy expenditure for a user"""
     height = float(height) * 2.54
     weight = float(weight) / 2.2
     age = float(age)
@@ -20,6 +21,7 @@ def calculate_tdee(gender, height, weight, age, activity_level):
 
 
 def calculate_bmi(height, weight):
+    """Calculate the body max index"""
     height = float(height)
     weight = float(weight)
     bmi = round(703 * weight / (height*height))
@@ -27,12 +29,14 @@ def calculate_bmi(height, weight):
 
 
 def calculate_ideal_weight(height):
+    """calculate a users ideal weight using the highest healthy bmi"""
     height = float(height)
     ideal_weight = round((24.9*(height*height))/703)
     return ideal_weight
 
 
 def calculate_pounds_to_lose(current_weight, height):
+    """calculate how many pounds a user would need to lose to reach their ideal weight"""
     current_weight = float(current_weight)
     ideal_weight = calculate_ideal_weight(height)
     need_to_lose = current_weight - ideal_weight
@@ -40,6 +44,7 @@ def calculate_pounds_to_lose(current_weight, height):
 
 
 def calculate_ideal_time_frame(tdee, need_to_lose):
+    """Minimum number of days that their weight loss should take if using the lowest recommended caloric intake of 1200 daily"""
     tdee = float(tdee)
     need_to_lose = float(need_to_lose)
     calories_to_lose = need_to_lose*3500

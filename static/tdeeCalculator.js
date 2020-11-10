@@ -1,71 +1,62 @@
-function calculateTDEE(gender, height, weight, age, activityLevel) {
-    let activityMultiplier
-    height = height * 2.54
-    weight = weight / 2.2
-    switch (activityLevel) {
-        case "level1":
-            activityMultiplier = 1.2;
-            break;
-        case "level2":
-            activityMultiplier = 1.375;
-            break;
-        case "level3":
-            activityMultiplier = 1.55;
-            break;
-        case "level4":
-            activityMultiplier = 1.725;
-            break;
-        case "level5":
-            activityMultiplier = 1.9;
-            break;
+// In case i decide to do this with javascript
 
-    }
-    if (gender === 'male') {
-        // basal metabolic rate
+// function calculateTDEE(gender, height, weight, age, activityLevel) {
+//     let activityMultiplier
+//     height = height * 2.54
+//     weight = weight / 2.2
+//     switch (activityLevel) {
+//         case "level1":
+//             activityMultiplier = 1.2;
+//             break;
+//         case "level2":
+//             activityMultiplier = 1.375;
+//             break;
+//         case "level3":
+//             activityMultiplier = 1.55;
+//             break;
+//         case "level4":
+//             activityMultiplier = 1.725;
+//             break;
+//         case "level5":
+//             activityMultiplier = 1.9;
+//             break;
 
-        // convert height and weight to metric units (cm and kg)
+//     }
+//     if (gender === 'male') {
+//         // basal metabolic rate
 
-        let bmr = (66 + (13.7 * weight) + (5 * height) - (6.8 * age))
+//         // convert height and weight to metric units (cm and kg)
 
-        console.log(`Your Total Daily Energy Expenditure is ${Math.round(bmr * activityMultiplier)}`)
+//         let bmr = (66 + (13.7 * weight) + (5 * height) - (6.8 * age))
 
-    }
-    else if (gender === 'female') {
-        // basal metabolic rate
+//         console.log(`Your Total Daily Energy Expenditure is ${Math.round(bmr * activityMultiplier)}`)
 
-        // convert height and weight to metric units (cm and kg)
+//     }
+//     else if (gender === 'female') {
+//         // basal metabolic rate
 
-        let bmr = (655 + (9.6 * weight) + (1.8 * height) - (4.7 * age))
-        switch (activityLevel) {
-            case "level1":
-                activityMultiplier = 1.2;
-                break;
-            case "level2":
-                activityMultiplier = 1.375;
-                break;
-            case "level3":
-                activityMultiplier = 1.55;
-                break;
-            case "level4":
-                activityMultiplier = 1.725;
-                break;
-            case "level5":
-                activityMultiplier = 1.9;
-                break;
+//         // convert height and weight to metric units (cm and kg)
 
-        }
-        console.log(`Your Total Daily Energy Expenditure is ${Math.round(bmr * activityMultiplier)}`)
+//         let bmr = (655 + (9.6 * weight) + (1.8 * height) - (4.7 * age))
+//         switch (activityLevel) {
+//             case "level1":
+//                 activityMultiplier = 1.2;
+//                 break;
+//             case "level2":
+//                 activityMultiplier = 1.375;
+//                 break;
+//             case "level3":
+//                 activityMultiplier = 1.55;
+//                 break;
+//             case "level4":
+//                 activityMultiplier = 1.725;
+//                 break;
+//             case "level5":
+//                 activityMultiplier = 1.9;
+//                 break;
 
-    }
-}
+//         }
+//         console.log(`Your Total Daily Energy Expenditure is ${Math.round(bmr * activityMultiplier)}`)
 
-let greetings = ['morning']
-
-function greetingForJoyce(timing) {
-    if (timing === 'first') {
-        console.log('Good morning Joyce!')
-    } else {
-        greetings.unshift('Good')
-        console.log(greetings[0] + greetings[1])
-    }
-}
+//     }
+// }
