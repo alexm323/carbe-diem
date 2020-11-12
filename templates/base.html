@@ -7,8 +7,11 @@
     <title>Carbe Diem</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.0/css/all.css"
         integrity="sha384-OLYO0LymqQ+uHXELyx93kblK5YIS3B2ZfLGBmsJaUyor7CpMTBsahDHByqSuWW+q" crossorigin="anonymous">
-
+    {%block style%}
     <link rel="stylesheet" href="/static/style.css">
+
+    {%endblock%}
+
     <title>{% block title%}{% endblock%}</title>
 </head>
 
@@ -23,12 +26,9 @@
 
             {%block header%}
             <!-- Navbar Section -->
-            <div class="navbar">
-                <a class='signup-link' href="/">Home</a>
-                <a class='signup-link' href="/learn">Learn</a>
-                <a class='signup-link' href="/dashboard"><i class="fas fa-tachometer-alt"></i></a>
-                <a href="/metrics"><i class="fas fa-clipboard-list"></i></a>
-                <a href="/search"><i class="fas fa-search"></i></a>
+            <div class="navbar navbar-light bg-light">
+                <p class="navbar-brand text-warning m-0">Carbe Diem</p>
+                <!-- <a class="navbar-brand text-warning">Carbe Diem</a> -->
                 <a class='signup-link' href="/logout">Log Out</a>
             </div>
 
@@ -36,11 +36,7 @@
             {%endblock%}
             {%block content%}
             {%endblock%}
-            <footer id='footer' class="center bg-dark">
-                <p><a class='signup-link' href="/">
-                        Carbe Diem &copy; 2020
-                    </a></p>
-            </footer>
+
         </div>
     </div>
 

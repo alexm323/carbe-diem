@@ -1,185 +1,218 @@
 {%extends 'base.html'%}
 {%block title%}Dashboard{%endblock%}
+{%block style%}
+<link rel="stylesheet" href="/static/bootstrap.css">
+{%endblock%}
 {%block content%}
-<div class="wrapper">
-    <!-- Sidebar for searching food -->
-    <div class="search-bar">
-        <div class="form">
-            <div class="header">
-                <h2 class='animation a3'>Retrieve<br> Nutritional Data</h2>
+<div class="container-fluid mt-5">
+
+    <div class="row">
+        <div class="col">
+            <!-- Sidebar for searching food -->
+            <div class='container bg-secondary rounded p-3'>
+                <div class="lead text-light">Search a new food</div>
+                <hr>
+                <form id='food-search' method='POST' action='/search'>
+                    {{food_form.hidden_tag()}}
+                    <div class="form-group">
+                        {% for field in food_form
+                if field.widget.input_type != 'hidden' %}
+                        <p>
+                            {{field.label(class_='text-light')}}
+                            {{field(class_='form-control')}}
+
+                            {% for error in field.errors %}
+                            <span class="">{{error}}</span>
+                            {%endfor%}
+                        </p>
+                        {%endfor%}
+                    </div>
+                    <button class='btn btn-warning btn-block' type='submit'>Search Food</button>
+                </form>
+            </div>
+            <!-- end side bar for searching food -->
+            <!-- Quick Add Section -->
+            <div class='container bg-warning rounded p-3 mt-5'>
+                <div class="lead text-light">Quick Add</div>
+                <hr>
+                <form method='POST' action='/quick_add'>
+                    {{select_food_form.hidden_tag()}}
+                    {% for field in select_food_form
+                        if field.widget.input_type != 'hidden' %}
+                    <p>
+                        {{field.label(class_='text-light')}}
+                        {{field(class_='form-control')}}
+
+                        {% for error in field.errors %}
+                        <span class="">{{error}}</span>
+                        {%endfor%}
+                    </p>
+                    {%endfor%}
+                    <button class='btn btn-secondary btn-block' type='submit'>Search Food</button>
+                </form>
+            </div>
+            <!-- End Quick Add Section -->
+        </div>
+        <div class="col-8 rounded border border-warning">
+            <div class='container-fluid'>
+                <div class="row">
+                    <div class='col-6'>
+                        <!-- Overview Table -->
+                        <caption>Overview for {{today.strftime('%m/%d/%y')}}</caption>
+                        <table class='table table-bordered table-striped'>
+
+                            <tr>
+                                <th></th>
+                                <th>Daily Goal</th>
+                                <th>Total Logged</th>
+                                <th>Remaining</th>
+                            </tr>
+                            <tr>
+                                <td class=''>Calories (kCal)</td>
+                                <td>{{(user.statistics[0].tdee)}}</td>
+                                <td>{{sum_calories}}</td>
+                                <td>{{(user.statistics[0].tdee) - (sum_calories)}}</td>
+
+                            </tr>
+                            <tr>
+                                <td class='carbs'>Carbs (g)</td>
+                                <td>{{(user.statistics[0].tdee * 0.05/4)|round|int}}</td>
+                                <td>{{sum_carbs}}</td>
+                                <td>{{((user.statistics[0].tdee * 0.05/4) - (sum_carbs))|round|int}}</td>
+                            </tr>
+                            <tr>
+                                <td class='fats'>Fats (g)</td>
+                                <td>{{(user.statistics[0].tdee * 0.6/9)|round|int}}</td>
+                                <td>{{sum_fat}}</td>
+                                <td>{{((user.statistics[0].tdee * 0.6/9) - sum_fat)|round|int}}</td>
+                            </tr>
+                            <tr>
+                                <td class='proteins'>Protein (g)</td>
+                                <td>{{(user.statistics[0].tdee * 0.35/4)|round|int}}</td>
+                                <td>{{sum_protein}}</td>
+                                <td>{{((user.statistics[0].tdee * 0.35/4) - sum_protein)|round|int}}</td>
+                            </tr>
+                        </table>
+                        <!-- End Overview table -->
+
+                    </div>
+                    <div class='col-6'>
+                        <div id='chartHolder'>
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+                </div>
 
             </div>
-            <form id='food-search' method='POST' action='/search'>
-                {{food_form.hidden_tag()}}
-                {% for field in food_form
-                if field.widget.input_type != 'hidden' %}
-                <p>
-                    {{field.label}}
-                    {{field(class_='form-field animation a5')}}
+            <div class='container-fluid'>
+                <div class="row">
+                    <div class='col'>
+                        <!-- Intake Table -->
+                        <caption>Food Log</caption>
+                        <table class='table table-bordered table-striped'>
 
-                    {% for error in field.errors %}
-                    <span class="">{{error}}</span>
-                    {%endfor%}
-                </p>
-                {%endfor%}
-                <button class='submit-button animation a6' type='submit'>Search Food</button>
-            </form>
+                            <tr>
+                            <tr>
+                                <th>Entry Item</th>
+                                <th>Servings</th>
+                                <th>Calories</th>
+                                <th>Carbs</th>
+                                <th>Fat</th>
+                                <th>Protein</th>
+                                <th>Remove</th>
+                            </tr>
+                            {%for entry in entries%}
+                            <tr>
+                                <td>{{entry.food.item}}</td>
+                                <td>{{entry.servings}}</td>
+                                <td>{{entry.food.calories *entry.servings}}</td>
+                                <td>{{entry.food.carbs *entry.servings}}</td>
+                                <td>{{entry.food.fat *entry.servings}}</td>
+                                <td>{{entry.food.protein *entry.servings}}</td>
+                                <td>
+                                    <form action="/remove_entry" method="POST">
+                                        <button class='btn btn-block btn-outline-danger' name='entry_id'
+                                            value={{entry.id}} type="submit"><i class="fas fa-trash-alt"></i></button>
 
+                                    </form>
+                                </td>
+                            </tr>
+                            {%endfor%}
+                            <tr>
+                                <td>Total</td>
+                                <td></td>
+                                <td>{{sum_calories}} kCal</td>
+                                <td>{{sum_carbs}} g</td>
+                                <td>{{sum_fat}} g</td>
+                                <td>{{sum_protein}} g</td>
+                            </tr>
+
+                        </table>
+                        <!-- End Intake Table -->
+                    </div>
+                    <div class='col'>
+                        <!-- Metrics Summary -->
+                        <caption>Health Stats</caption>
+                        <table class='table table-bordered table-striped'>
+
+                            <tr>
+                                <th>Metric</th>
+                                <th>Current Data</th>
+                                <th>Healthy Goal</th>
+                            </tr>
+                            <tr>
+                                <td>Total Daily Energy Expenditure</td>
+                                <td>{{user.statistics[0].tdee}} kCals</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Body Mass Index</td>
+                                <td>{{user.statistics[0].bmi}} kg/m<sup>2</sup></td>
+                                <td>24.9 kg/m<sup>2</sup></td>
+                            </tr>
+                            <tr>
+                                <td>Weight</td>
+                                <td>{{user.statistics[0].weight}} lbs.</td>
+                                <td>{{user.statistics[0].ideal_weight}} lbs.</td>
+                            </tr>
+                            <tr>
+                                <td>Weight Left to Lose</td>
+                                <td>{{user.statistics[0].pounds_to_lose}} lbs.</td>
+                                <td>-</td>
+                            </tr>
+                            <!-- <tr>
+                                <td>Days to reach goal: 1200kCal/day</td>
+                                <td>{{user.statistics[0].ideal_time_frame}} days</td>
+                                <td>-</td>
+                            </tr> -->
+                        </table>
+                        <!-- Metrics End -->
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
-    <!-- end side bar for searching food -->
-    <!-- Previous Foods drop down-->
-    <form method='POST' action='/new_entry'>
-        {{select_food_form.hidden_tag()}}
-        {% for field in select_food_form
-        if field.widget.input_type != 'hidden' %}
-        <p>
-            {{field.label}}
-            {{field(class_='form-field animation a5')}}
-
-            {% for error in field.errors %}
-            <span class="">{{error}}</span>
-            {%endfor%}
-        </p>
-        {%endfor%}
-        <button class='submit-button animation a6' type='submit'>Search Food</button>
-    </form>
-    <!-- End previous foods drop down -->
-    <!-- Metrics Form start -->
-
-
-
-    <h1 class="display-1">Calculate your health Stats</h1>
-    <p class="lead"></p>
-
-
-    <form id='TDEE-form' method="POST" action="/metrics">
-        {{metrics_form.hidden_tag()}}
-        {% for field in metrics_form
+        <!-- Metrics Form start -->
+        <div class="col">
+            <div class='container bg-secondary rounded p-3'>
+                <div class="lead text-light">Update your health stats</div>
+                <hr>
+                <form id='TDEE-form' method="POST" action="/metrics">
+                    {{metrics_form.hidden_tag()}}
+                    {% for field in metrics_form
             if field.widget.input_type != 'hidden' %}
-        <p>
-            {{field.label}}
-            {{field(class_="form-field")}}
+                    <p>
+                        {{field.label(class_="text-light")}}
+                        {{field(class_="form-control")}}
+                    </p>
+                    {%endfor%}
+                    <button class='btn btn-warning btn-block' type='submit'>Submit</button>
+                </form>
 
-            <!-- {% for error in field.errors %}
-            <span class="form-text text-danger">{{error}}</span>
-            {%endfor%} -->
-        </p>
-        {%endfor%}
-        <button class='submit-button' type='submit'>Submit</button>
-    </form>
-
-    <!-- Metric Form End -->
-    <div class="grid-2 dashboard-table-chart">
-
-
-        <table class='table'>
-            <caption class='caption3'>Today's Intake</caption>
-            <tr>
-            <tr class='row odd'>
-                <th>Entry Item</th>
-                <th>Servings</th>
-                <th>Calories</th>
-                <th>Carbs</th>
-                <th>Fat</th>
-                <th>Protein</th>
-            </tr>
-            {%for entry in entries%}
-            <tr class="row">
-                <td>{{entry.food.item}}</td>
-                <td id='entry-servings'>{{entry.servings}}</td>
-                <td>{{entry.food.calories *entry.servings}}</td>
-                <td>{{entry.food.carbs *entry.servings}}</td>
-                <td>{{entry.food.fat *entry.servings}}</td>
-                <td>{{entry.food.protein *entry.servings}}</td>
-            </tr>
-            {%endfor%}
-            <tr class='total'>
-                <td>Total</td>
-                <td></td>
-                <td>{{sum_calories}} kCal</td>
-                <td>{{sum_carbs}} g</td>
-                <td>{{sum_fat}} g</td>
-                <td>{{sum_protein}} g</td>
-            </tr>
-
-        </table>
-        <div id='chartHolder'>
-            <canvas id="myChart"></canvas>
+            </div>
         </div>
+        <!-- Metric Form End -->
     </div>
-    <div class="grid-2">
-        <table class='table'>
-            <caption class='caption2'>Overview for {{today.strftime('%m/%d/%y')}}</caption>
-            <tr class='row odd'>
-                <th></th>
-                <th>Daily Goal</th>
-                <th>Total Logged</th>
-                <th>Remaining</th>
-            </tr>
-            <tr class='row odd'>
-                <td class=''>Calories (kCal)</td>
-                <td>{{(user.statistics[0].tdee)}}</td>
-                <td>{{sum_calories}}</td>
-                <td>{{(user.statistics[0].tdee) - (sum_calories)}}</td>
-
-            </tr>
-            <tr class='row'>
-                <td class='carbs'>Carbs (g)</td>
-                <td>{{(user.statistics[0].tdee * 0.05/4)|round|int}}</td>
-                <td>{{sum_carbs}}</td>
-                <td>{{((user.statistics[0].tdee * 0.05/4) - (sum_carbs))|round|int}}</td>
-            </tr>
-            <tr class='row odd'>
-                <td class='fats'>Fats (g)</td>
-                <td>{{(user.statistics[0].tdee * 0.6/9)|round|int}}</td>
-                <td>{{sum_fat}}</td>
-                <td>{{((user.statistics[0].tdee * 0.6/9) - sum_fat)|round|int}}</td>
-            </tr>
-            <tr class='row'>
-                <td class='proteins'>Protein (g)</td>
-                <td>{{(user.statistics[0].tdee * 0.35/4)|round|int}}</td>
-                <td>{{sum_protein}}</td>
-                <td>{{((user.statistics[0].tdee * 0.35/4) - sum_protein)|round|int}}</td>
-            </tr>
-        </table>
-        <table class='table'>
-            <caption class='caption1'>Health by the Numbers</caption>
-            <tr class='row odd'>
-                <th>Metric</th>
-                <th>Current Data</th>
-                <th>Healthy Goal</th>
-            </tr>
-            <tr class='row'>
-                <td>Total Daily Energy Expenditure</td>
-                <td>{{user.statistics[0].tdee}} kCals</td>
-                <td>-</td>
-            </tr>
-            <tr class='row odd'>
-                <td>Body Mass Index</td>
-                <td>{{user.statistics[0].bmi}} kg/m<sup>2</sup></td>
-                <td>24.9 kg/m<sup>2</sup></td>
-            </tr>
-            <tr class='row'>
-                <td>Weight</td>
-                <td>{{user.statistics[0].weight}} lbs.</td>
-                <td>{{user.statistics[0].ideal_weight}} lbs.</td>
-            </tr>
-            <tr class='row odd'>
-                <td>Weight Left to Lose</td>
-                <td>{{user.statistics[0].pounds_to_lose}} lbs.</td>
-                <td>-</td>
-            </tr>
-            <tr class='row'>
-                <td>Days to reach goal: 1200kCal/day</td>
-                <td>{{user.statistics[0].ideal_time_frame}} days</td>
-                <td>-</td>
-            </tr>
-        </table>
-
-    </div>
-
-
 </div>
 
 

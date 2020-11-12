@@ -10,7 +10,7 @@ class LoginForm(FlaskForm):
     password = PasswordField("password", validators=[
                              InputRequired(), Length(min=8, max=80)])
     # remembers the user in the current session
-    remember = BooleanField('remember me')
+    # remember = BooleanField('remember me')
     # email = StringField("email", validators=[InputRequired(), Email()])
     # first_name = StringField("first_name", validators=[InputRequired()])
     # last_name = StringField("last_name", validators=[InputRequired()])
@@ -45,5 +45,6 @@ class FoodForm(FlaskForm):
 
 class SelectFood(FlaskForm):
     """Drop down menu for selectable foods that are populated based on whether it is on the quick add section or if they are going through the food search route to find a food that is not in the database"""
-    selected_food = SelectField("Selected Food")
-    servings = IntegerField("Servings")
+    selected_food = SelectField("Database Food")
+    servings = SelectField("Servings", choices=[(1, 1), (
+        2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10)])

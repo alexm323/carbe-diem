@@ -24,12 +24,22 @@ BASE = "https://api.edamam.com/api/food-database/v2/parser"
 # User Login Section
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "/login"
+login_manager.login_view = "/register_and_login"
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+# Route to display our login and register forms
+
+
+@app.route('/register_and_login')
+def register_and_login():
+    """Renders the template for our login and register forms"""
+    login_form = LoginForm()
+    register_form = RegisterForm()
+    return render_template('login_and_register.html', login_form=login_form, register_form=register_form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -40,12 +50,12 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
             if check_password_hash(user.password, form.password.data):
-                login_user(user, remember=form.remember.data)
+                login_user(user)
                 return redirect('/dashboard')
     return render_template('login.html', form=form)
 
 
-@app.route('/signup', methods=['GET', 'POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
     if form.validate_on_submit():
@@ -278,6 +288,7 @@ def submit_new_entry_form():
     """Allow a user see all of a foods information that we are parsing from the api and give them a drop down to select both the right item and a serving size"""
     form = SelectFood()
     # use the session object to track what the last searched food was
+
     query_term = session['food']
     # We get the foods that the user has searched and display them in alphabetical order
     foods = Food.query.filter_by(
@@ -301,6 +312,38 @@ def submit_new_entry_form():
 
 #########################################################
 
+# I was running into a bug where the food kept loading from the last search on the quick add section
+# I decided a good work around was to reuse most of the code as a post route only and this takes care of the quick add feature without
+# breaking because of the session['food'] query. A .get method wasnt working because it would return empty or id have to give it a default value and that wasn't achieving the functionality I wanted
+
+
+@ app.route('/quick_add', methods=['POST'])
+@login_required
+def submit_quick_add_form():
+    """Allows a user to quickly add an entry from existing database entries"""
+    form = SelectFood()
+    food = request.form['selected_food']
+    servings = request.form['servings']
+    date = datetime.date.today().strftime("%m/%d/%y")
+    user_id = current_user.id
+    new_entry = Entry(food_id=food, date=date,
+                      user_id=user_id, servings=servings)
+    db.session.add(new_entry)
+    db.session.commit()
+    return redirect('/dashboard')
+    # still showing this page so a user can see the food data for all of the entries
+#################################################################
+
+
+@app.route('/remove_entry', methods=['POST'])
+@login_required
+def delete_entry():
+    """User is able to delete their entries"""
+    entry_id = request.form['entry_id']
+    Entry.query.filter_by(id=entry_id).delete()
+    db.session.commit()
+    return redirect('/dashboard')
+################################################################
 # Havent worked on this in a while but i would like to expand it to include different information for different diets
 
 
@@ -308,6 +351,7 @@ def submit_new_entry_form():
 def show_learn_info():
     """There is a learning page specifically about intermittent fasting and at this time i have not added additional information"""
     return render_template('learn.html')
+
 
 #########################################################
 # Need to add some if statements to the logic of the get food function so that if the food that is being searched matches a query term from the food table in the database then we just display the data we already have instead of searching again and making another api call

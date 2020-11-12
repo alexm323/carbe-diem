@@ -223,7 +223,10 @@ a,.signup-link:visited {
   }
 
 /* End Form Section */
-  
+.fill { 
+  min-height: 100%;
+  height: 100%;
+} 
   @keyframes left {
     0% {
       opacity: 0;
@@ -343,11 +346,12 @@ footer p {
 }
 
 .button {
+  display: block;
     margin-top: 10px;
     background-color: #f4991a;
     /* Green */
-    border: none;
-    border-radius: 5%;
+    border: 1px solid black;
+    border-radius: 5px;
     color: #321313;
     padding: 15px 32px;
     text-align: center;
@@ -398,13 +402,7 @@ footer p {
     color: whitesmoke;
   }
   /* TABLES STYLING */
-  .table{
-  color: #000;
-  margin: 0 0 40px 0;
-  width: 100%;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  display: table;
-  }
+
   /* @media screen and (max-width: 580px)
     display: block} */
   .row{
@@ -412,6 +410,7 @@ footer p {
     background:#f6f6f6;
 
   }
+
   .odd{
     background: #e9e9e9;
   }
@@ -451,16 +450,5 @@ footer p {
   canvas{
     max-width: 50vw;
   }
-  th{
-    text-align: left;
-  }
-.dashboard-table-chart{
-  /* display: block; */
-  margin: 0;
-  background-color: whitesmoke;
-  max-height: 100vh;
-}
-.total td{
 
-  border: 1px solid black ;
-}
+

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{%block title%}Login{%endblock%}
+{%block header%}{%endblock%}
+{%block style%}
+<link rel="stylesheet" href="/static/bootstrap.css">
+{%endblock%}
+{% block content %}
+<div class="container">
+    <img style='max-width:200px' src="https://i.ibb.co/HPzBXft/logo-transparent.png" alt="logo-transparent" border="0">
+    <div class="row p-5 m-3 rounded" style='background-color:#f2ead3;'>
+        <div class="container col border-right border-warning">
+            <h3>Register</h3>
+            <hr>
+            <form method='POST' action='/register'>
+                {{register_form.hidden_tag()}}
+                {% for field in register_form
+                if field.widget.input_type != 'hidden' %}
+                <p>
+                    {{field.label}}
+                    {{field(class_='form-control')}}
+
+                    {% for error in field.errors %}
+                    <span class="">{{error}}</span>
+                    {%endfor%}
+                </p>
+                {%endfor%}
+                <button class='btn btn-warning btn-block' type='submit'>Register</button>
+            </form>
+        </div>
+        <div class="container col border-warning border-left ">
+            <h3>Login</h3>
+            <hr>
+            <form method='POST' action='/login'>
+                {{login_form.hidden_tag()}}
+
+
+                {% for field in login_form
+                if field.widget.input_type != 'hidden' %}
+                <p>
+
+                    {{field.label}}
+                    {{field(class_='form-control')}}
+
+                    {% for error in field.errors %}
+                    <span class="">{{error}}</span>
+                    {%endfor%}
+                </p>
+                {%endfor%}
+                <button class='btn btn-secondary btn-block' type='submit'>Login</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+{%endblock%}
