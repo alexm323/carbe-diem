@@ -1,38 +1,44 @@
 {%extends 'base.html'%}
 {%block title%}New Entry{%endblock%}
+{%block style%}
+<link rel="stylesheet" href="/static/bootstrap.css">
+{%endblock%}
 {%block content%}
-<h2>{{foods.query_term}} Search Results</h2>
-<table>
-    <tr>
-        <th>Food Name</th>
-        <th>kCal</th>
-        <th>Carbs</th>
-        <th>Fat</th>
-        <th>Protein</th>
-    </tr>
-    {%for food in foods%}
-    <tr>
-        <td>{{food.item}}</td>
-        <td>{{food.calories}} cal</td>
-        <td>{{food.carbs}} g</td>
-        <td>{{food.fat}} g</td>
-        <td>{{food.protein}} g</td>
-    </tr>
-    {%endfor%}
-</table>
-<form method='POST'>
-    {{form.hidden_tag()}}
-    {% for field in form
-    if field.widget.input_type != 'hidden' %}
-    <p>
-        {{field.label}}
-        {{field(class_='form-field animation a5')}}
-
-        {% for error in field.errors %}
-        <span class="">{{error}}</span>
+<div class="container bg-warning mt-5 p-3 rounded">
+    <h2 class='display-4'>{{foods.query_term}} Search Results</h2>
+    <table class='table table-dark rounded table-striped'>
+        <tr>
+            <th>Food Name</th>
+            <th>kCal</th>
+            <th>Carbs</th>
+            <th>Fat</th>
+            <th>Protein</th>
+        </tr>
+        {%for food in foods%}
+        <tr>
+            <td>{{food.item}}</td>
+            <td>{{food.calories}} cal</td>
+            <td>{{food.carbs}} g</td>
+            <td>{{food.fat}} g</td>
+            <td>{{food.protein}} g</td>
+        </tr>
         {%endfor%}
-    </p>
-    {%endfor%}
-    <button class='submit-button animation a6' type='submit'>Search Food</button>
-</form>
+    </table>
+    <form method='POST'>
+        {{form.hidden_tag()}}
+        {% for field in form
+    if field.widget.input_type != 'hidden' %}
+        <p>
+            {{field.label(class_='text-light')}}
+            {{field(class_='form-control')}}
+
+            {% for error in field.errors %}
+            <span class="">{{error}}</span>
+            {%endfor%}
+        </p>
+        {%endfor%}
+        <button class='btn btn-block btn-secondary' type='submit'>Confirm Food</button>
+    </form>
+</div>
+
 {%endblock%}

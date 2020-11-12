@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {%block title%}Energy Calculation{%endblock%}
-
+{%block style%}
+<link rel="stylesheet" href="/static/bootstrap.css">
+{%endblock%}
 {% block content %}
-<div class="wrapper">
+<div class='container rounded bg-secondary p-3 mt-5'>
 
 
-    <h1 class="display-1">Calculate your health Stats</h1>
+    <h1 class="display-4 text-dark">Calculate your current level of health</h1>
     <p class="lead"></p>
 
 
@@ -14,15 +16,15 @@
         {% for field in form
         if field.widget.input_type != 'hidden' %}
         <p>
-            {{field.label}}
-            {{field(class_="form-field")}}
+            {{field.label(class_="text-light")}}
+            {{field(class_="form-control")}}
 
             <!-- {% for error in field.errors %}
         <span class="form-text text-danger">{{error}}</span>
         {%endfor%} -->
         </p>
         {%endfor%}
-        <button class='submit-button' type='submit'>Submit</button>
+        <button class='btn btn-block btn-warning' type='submit'>Calculate</button>
     </form>
 </div>
 
