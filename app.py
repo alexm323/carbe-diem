@@ -54,7 +54,10 @@ def login():
             if check_password_hash(user.password, form.password.data):
                 login_user(user)
                 return redirect('/dashboard')
-    return render_template('login.html', form=form)
+        else:
+            return redirect('/register_and_login')
+    return redirect('/register_and_login')
+    # return render_template('login.html', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
