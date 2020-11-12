@@ -69,7 +69,9 @@ def signup():
         db.session.commit()
         login_user(new_user)
         return redirect('/metrics')
-    return render_template('signup.html', form=form)
+    else:
+        return redirect('/register_and_login')
+    # return render_template('login_and_register.html', form=form)
 
 
 @ app.route('/logout')
