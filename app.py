@@ -10,7 +10,7 @@ from tdee_calculator import *
 import datetime
 search_endpoint = 'https://api.edamam.com/api/food-database/v2/parser'
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///nutrientry'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///carbe_diem'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = "ILessThan3You"
