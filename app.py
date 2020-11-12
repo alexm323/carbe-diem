@@ -8,9 +8,11 @@ from forms import LoginForm, RegisterForm, TDEEForm, FoodForm, SelectFood
 from werkzeug.security import generate_password_hash, check_password_hash
 from tdee_calculator import *
 import datetime
+import os
 search_endpoint = 'https://api.edamam.com/api/food-database/v2/parser'
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///carbe_diem'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL', 'postgresql:///carbe_diem')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = "ILessThan3You"
