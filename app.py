@@ -47,7 +47,6 @@ def register_and_login():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
@@ -63,17 +62,28 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def signup():
     form = RegisterForm()
-    if form.validate_on_submit():
-        hashed_password = generate_password_hash(
-            form.password.data, method='sha256')
-        new_user = User(username=form.username.data,
-                        email=form.email.data, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        login_user(new_user)
-        return redirect('/metrics')
-    else:
+    usernames = []
+    user_emails = []
+    users = User.query.all()
+    for user in users:
+        usernames.append(user.username)
+        user_emails.append(user.email)
+    if form.username.data in usernames:
         return redirect('/register_and_login')
+    elif form.email.data in user_emails:
+        return redirect('/register_and_login')
+    else:
+        if form.validate_on_submit():
+            hashed_password = generate_password_hash(
+                form.password.data, method='sha256')
+            new_user = User(username=form.username.data,
+                            email=form.email.data, password=hashed_password)
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            return redirect('/metrics')
+        else:
+            return redirect('/register_and_login')
     # return render_template('login_and_register.html', form=form)
 
 
@@ -358,7 +368,6 @@ def delete_entry():
 def show_learn_info():
     """There is a learning page specifically about intermittent fasting and at this time i have not added additional information"""
     return render_template('learn.html')
-
 
 #########################################################
 # Need to add some if statements to the logic of the get food function so that if the food that is being searched matches a query term from the food table in the database then we just display the data we already have instead of searching again and making another api call

@@ -7,9 +7,6 @@ body {
 
 }
 
-
-
-
 .showcase::after {
     content: '';
     height: 100vh;
@@ -300,19 +297,19 @@ footer p {
 
 @media(max-width: 400px) {
     .showcase::after {
-        height: 50vh;
-
+      margin: 0;
+      display: block;
+      height: 50vh;
+      
     }
-
     .content {
         top: 2%;
-        margin-top: 5px;
+        
         filter: blur(0px);
     }
 
     .content .logo {
-        height: 500px;
-        width: 500px;
+        width: auto;
     }
 
     .content .text {
@@ -321,11 +318,13 @@ footer p {
 
     .grid-3,
     .grid-2 {
+        
         grid-template-columns: 1fr;
 
     }
 
     .services div {
+        /* margin-top: 500px; */
         border-bottom: #333 dashed 1px;
         padding: 1.2rem 1rem;
     }
